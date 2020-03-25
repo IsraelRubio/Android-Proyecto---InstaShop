@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "928741686225",
+    "firebase_url": "https://instashop-cb811.firebaseio.com",
+    "project_id": "instashop-cb811",
+    "storage_bucket": "instashop-cb811.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:928741686225:android:f5e37e448b929d591cbef0",
+        "android_client_info": {
+          "package_name": "israelontanilla.es.instashop"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "928741686225-3gr7pdsngus3589tfu905be5j3gn5sdn.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "israelontanilla.es.instashop",
+            "certificate_hash": "e94193ce277c47b239a3aa341976c23291adeff5"
+          }
+        },
+        {
+          "client_id": "928741686225-svu5mfr2dihvv1b8p85duemn5lc9g7cq.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBU0JKYUYRbsuAnCNG2WFYsV8zP1jC5Oao"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "928741686225-svu5mfr2dihvv1b8p85duemn5lc9g7cq.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    tools:context=".ProfileActivity">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAlignment="center"
+        android:text="Profile"
+        android:textSize="40sp"
+        android:textColor="@color/colorAccent"></TextView>
+
+    <TextView
+        android:id="@+id/viewName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAlignment="center"
+        android:textSize="15sp"
+        android:text="Name"
+        android:textColor="@android:color/black"></TextView>
+
+    <TextView
+        android:id="@+id/viewNick"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAlignment="center"
+        android:textSize="15sp"
+        android:text="Nick"
+        android:textColor="@android:color/black"></TextView>
+
+    <TextView
+        android:id="@+id/viewEmail"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAlignment="center"
+        android:textSize="15sp"
+        android:text="Email"
+        android:textColor="@android:color/black"></TextView>
+
+    <TextView
+        android:id="@+id/viewPassword"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="15sp"
+        android:textAlignment="center"
+        android:text="Password"
+        android:textColor="@android:color/black"></TextView>
+
+    <TextView
+        android:id="@+id/viewMobile"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAlignment="center"
+        android:textSize="15sp"
+        android:text="Mobile"
+        android:textColor="@android:color/black"
+        ></TextView>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="bottom">
+
+        <Button
+            android:id="@+id/btnSingOut"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Sing Out"
+            android:textColor="@android:color/white"
+            android:layout_marginBottom="10dp"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="30dp"
+            android:background="@android:color/holo_blue_light"
+            android:padding="5dp"
+            style="@style/AppTheme"
+            android:textSize="20sp"></Button>
+
+        <Button
+            android:id="@+id/btnDeleteProfile"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Delete Profile"
+            android:layout_marginBottom="30dp"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="30dp"
+            android:textColor="@android:color/white"
+            android:background="@android:color/holo_red_light"
+            android:padding="5dp"
+            style="@style/AppTheme"
+            android:textSize="20sp"></Button>
+
+    </LinearLayout>
+
+</LinearLayout>
