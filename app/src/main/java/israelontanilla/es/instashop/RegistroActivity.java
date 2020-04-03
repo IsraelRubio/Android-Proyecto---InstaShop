@@ -1,10 +1,12 @@
 package israelontanilla.es.instashop;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -15,11 +17,26 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+
+import javax.crypto.Cipher;
+import javax.crypto.KeyGenerator;
+import javax.crypto.SecretKey;
+import javax.crypto.spec.SecretKeySpec;
+
+import Models.User;
 
 public class RegistroActivity extends AppCompatActivity {
 
@@ -36,11 +53,20 @@ public class RegistroActivity extends AppCompatActivity {
     private String nick = "";
     private String password = "";
     private String email = "";
-    private String mobile = "";
+    private int mobile = 0;
     private int access = 0;
+    private String image = "";
 
     FirebaseAuth mAuth;
     DatabaseReference mDatabase; // Referencia a la base de datos
+    DatabaseReference nDatabase;
+
+    private static String ENCRYPT_KEY="C@-l-@a-@v@-e-@1-@5@-8-@|@#~€¬!·$%%&//(()==??";
+    private static final  String AES = "AES";
+
+    List<String> listNick = new ArrayList<>();
+    List<String> listEmail = new ArrayList<>();
+    private static boolean testData = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,7 +82,8 @@ public class RegistroActivity extends AppCompatActivity {
         mButtonRegister = (Button) findViewById(R.id.btnRegister);
 
         mAuth = FirebaseAuth.getInstance(); // Conseguimos la autenticacion de firebase
-        mDatabase = FirebaseDatabase.getInstance().getReference(); // Conseguimos la referencia a la base de
+        mDatabase = FirebaseDatabase.getInstance().getReference(); // Conseguimos la referencia a la base de datos
+        nDatabase = FirebaseDatabase.getInstance().getReference();
 
         // Registro de un nuevo usuario
         mButtonRegister.setOnClickListener(new View.OnClickListener() {
@@ -67,33 +94,12 @@ public class RegistroActivity extends AppCompatActivity {
                 nick = mEditTextNick.getText().toString();
                 password = mEditTextPassword.getText().toString();
                 email = mEditTextEmail.getText().toString();
-                mobile = mEditTextMobile.getText().toString();
+                mobile = Integer.getInteger(mEditTextMobile.getText().toString());
 
                 access = password.contains("11111") ? 1 : 2;
 
-                // compruebo que los datos estan bien
-                if (!name.isEmpty() || !nick.isEmpty() || !password.isEmpty() || !email.isEmpty() || !mobile.isEmpty())
-                {
-                    if (name.length() > 50)
-                    {
-                        Toast.makeText(RegistroActivity.this, "The length of the name field must be less than 50", Toast.LENGTH_LONG).show();
-                    }
-                    else if (nick.length() > 10)
-                    {
-                        Toast.makeText(RegistroActivity.this, "The length of the nick field must be less than 10", Toast.LENGTH_LONG).show();
-                    }
-                    else if (password.length() < 6)
-                    {
-                        Toast.makeText(RegistroActivity.this, "The length of the name field must be greater than 6", Toast.LENGTH_LONG).show();
-                    }
-                    else
-                    {
-                        RegiterUser();
-                    }
-                }
-                else
-                {
-                    Toast.makeText(RegistroActivity.this, "All fields are required.", Toast.LENGTH_LONG).show();
+                if (validateData()){
+                    RegiterUser();
                 }
             }
         });
@@ -108,18 +114,22 @@ public class RegistroActivity extends AppCompatActivity {
                 // Si la autenticacion de los datos es correcta
                 if (task.isComplete()){
 
-                    // creo un map de string y object
-                    Map<String, Object> map = new HashMap<>();
+                    // creo un map
+                    final Map<String, Object> map = new HashMap<>();
 
                     // Añado los campos al map
                     map.put("name", name);
                     map.put("email", email);
                     map.put("nick", nick);
-                    map.put("password", password);
+                    try {
+                        map.put("password", encrypt(password));
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }
                     map.put("mobile", mobile);
                     map.put("access", access);
 
-                    // consigo el id del usuario
+                    // consigo el id del usuario que he creado
                     String id = mAuth.getCurrentUser().getUid();
 
                     // Ingreso a la tabla users el map
@@ -128,6 +138,10 @@ public class RegistroActivity extends AppCompatActivity {
                         public void onComplete(@NonNull Task<Void> task2) {
                             // Si envio los datos correctamente a la base de datos
                             if (task2.isComplete()){
+                                // Envio al usuario un correo de confirmacion de registro
+                                FirebaseUser user = mAuth.getCurrentUser();
+                                user.sendEmailVerification();
+
                                 // Abro el actvity hacia el que quiero ir
                                 startActivity(new Intent(RegistroActivity.this,ProfileActivity.class));
                                 finish(); // cierro este activity para que el usuario que se ha registrado, no vuelva
@@ -142,5 +156,125 @@ public class RegistroActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    private String encrypt(String pass) throws Exception {
+        SecretKey secretKey = generateKey(ENCRYPT_KEY); // instacia de la llave secreta
+        Cipher cipher = Cipher.getInstance(AES); // instancio un objeto de cifrado de tipo AES
+        cipher.init(Cipher.ENCRYPT_MODE, secretKey); // inicializo el sistema de cifrado en modo encriptacion
+        byte[] dataEncryptBytes = cipher.doFinal(pass.getBytes());
+        String dataEncryptString = Base64.encodeToString(dataEncryptBytes, Base64.DEFAULT);
+
+        return dataEncryptString;
+    }
+
+    private SecretKeySpec generateKey(String encryptPass) throws Exception{
+        MessageDigest sha = MessageDigest.getInstance("SHA-256");
+        byte[] key = encryptPass.getBytes("UTF-8");
+        key = sha.digest(key);
+        SecretKeySpec secretKey = new SecretKeySpec(key, AES); // convierto la secretkey en el algoritmo de encritacion AES
+
+        return secretKey;
+    }
+
+    private boolean validateData(){
+        if (!name.isEmpty() || !nick.isEmpty() || !password.isEmpty() || !email.isEmpty() || mobile < 111111111)
+        {
+            testData = true;
+
+            if (name.length() > 50)
+            {
+                mEditTextName.setError("The length of the name field must be less than 50");
+                testData = false;
+            }else {
+                testData = true;
+            }
+            if (nick.length() > 10)
+            {
+                mEditTextNick.setError("The length of the nick field must be less than 10");
+                testData = false;
+            }else {
+                testData = true;
+            }
+            if (password.length() < 6)
+            {
+                mEditTextPassword.setError("The length of the name field must be greater than 6");
+                testData = false;
+            }else {
+                testData = true;
+            }
+        }
+        else
+        {
+            mEditTextName.setError("This field is required");
+            mEditTextNick.setError("This field is required");
+            mEditTextMobile.setError("This field is required");
+            mEditTextPassword.setError("This field is required");
+            mEditTextEmail.setError("This field is required");
+            testData = false;
+        }
+
+        if (mobile < 600000000 || mobile > 799999999){
+            mEditTextMobile.setError("This mobile not is valid.");
+            testData = false;
+        }else{
+            testData = true;
+        }
+
+        nDatabase.child("Users").orderByChild("nick").addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                listNick.add(dataSnapshot.child("nick").getValue().toString());
+                listEmail.add(dataSnapshot.child("email").getValue().toString());
+
+                System.out.println("LISTA DE NICKS");
+                for (String mNick : listNick){
+                    System.out.println("LISTA" + mNick);
+                    if (nick.equals(mNick)){
+                        mEditTextNick.setError("This nick already exist");
+                        System.out.println("Repetido -> " +mNick);
+                        testData = false;
+                        System.out.println("TEST 1 -> " +testData);
+                    }else{
+                        testData = true;
+                    }
+                }
+
+                System.out.println("LISTA DE EMAILS");
+                for (String mEmail : listEmail){
+                    System.out.println("LISTA" + mEmail);
+                    if (email.equals(mEmail)){
+                        mEditTextEmail.setError("This email already exist");
+                        System.out.println("Repetido -> " +mEmail);
+                        testData = false;
+                        System.out.println("TEST 2 -> " +testData);
+                    }else {
+                        testData = true;
+                    }
+                }
+            }
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+        return testData;
     }
 }

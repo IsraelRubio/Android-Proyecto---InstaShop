@@ -9,4 +9,24 @@
     <string name="invalid_username">Not a valid username</string>
     <string name="invalid_password">Password must be >5 characters</string>
     <string name="login_failed">"Login failed"</string>
+    <string name="Profile">Profile</string>
+    <string name="name">Name</string>
+    <string name="Name">Name</string>
+    <string name="Nick">  Nick</string>
+    <string name="Email">  Email</string>
+    <string name="Password">Password</string>
+    <string name="Mobile">Mobile</string>
+    <string name="Add_image">Add image</string>
+    <string name="update">Update</string>
+    <string name="sing_out">Sing Out</string>
+    <string name="delete_profile">Delete Profile</string>
+    <string name="email">  Email</string>
+    <string name="reset_password">Reset Password</string>
+    <string name="modify_profile">Modify Profile</string>
+    <string name="full_name">Full name</string>
+    <string name="nick_name">Nick name</string>
+    <string name="password">Password</string>
+    <string name="mobile">Mobile</string>
+    <string name="check">Check</string>
+    <string name="speedshop">SpeedShop</string>
 </resources>

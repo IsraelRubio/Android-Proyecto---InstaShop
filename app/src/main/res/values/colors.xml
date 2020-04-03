@@ -3,4 +3,9 @@
     <color name="colorPrimary">#008577</color>
     <color name="colorPrimaryDark">#00574B</color>
     <color name="colorAccent">#D81B60</color>
+    <color name="colorGreenAppBorders">#62F375</color>
+    <color name="colorBlackbackground">#242424</color>
+    <color name="colorBlackPearl">#1E272E</color>
+    <color name="colorRinho">#3B4350</color>
+    <color name="colorBorderSeparator">#416CB4</color>
 </resources>
