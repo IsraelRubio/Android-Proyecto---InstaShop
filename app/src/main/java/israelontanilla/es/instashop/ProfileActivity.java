@@ -16,6 +16,7 @@ import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -42,14 +43,11 @@ public class ProfileActivity extends AppCompatActivity {
     private Button mBtnSingOut;
     private Button mBtnDeleteProfile;
     private Button mBtnUpdateProfile;
-    private Button mBtnAddImage;
+    private ImageButton mBtnAddImage;
     private TextView mTextviewName;
     private TextView mTextviewNick;
-    private TextView mTextviewEmail;
-    private TextView mTextviewPassword;
     private TextView mTextviewMobile;
 
-    private ImageView mImageViewProfile;
     private Bitmap bitmap = null;
     private ProgressDialog mProgressDialog;
     private Uri mUri;
@@ -72,11 +70,8 @@ public class ProfileActivity extends AppCompatActivity {
         mStorage = FirebaseStorage.getInstance().getReference().child("imageProfile");
         mProgressDialog = new ProgressDialog(ProfileActivity.this);
 
-        mImageViewProfile = findViewById(R.id.imageProfile);
         mTextviewName = findViewById(R.id.viewName);
         mTextviewNick = findViewById(R.id.viewNick);
-        mTextviewEmail = findViewById(R.id.viewEmail);
-        mTextviewPassword = findViewById(R.id.viewPassword);
         mTextviewMobile = findViewById(R.id.viewMobile);
         mBtnSingOut = findViewById(R.id.btnSingOut);
         mBtnDeleteProfile = findViewById(R.id.btnDeleteProfile);
@@ -231,7 +226,7 @@ public class ProfileActivity extends AppCompatActivity {
 
             try {
                 Bitmap mBitmap = MediaStore.Images.Media.getBitmap(getContentResolver(),mUri);
-                mImageViewProfile.setImageBitmap(mBitmap);
+                mBtnAddImage.setImageBitmap(mBitmap);
                 mProgressDialog.dismiss();
             } catch (IOException e) {
                 e.printStackTrace();
@@ -257,9 +252,7 @@ public class ProfileActivity extends AppCompatActivity {
                     String mobile = dataSnapshot.child("mobile").getValue().toString();
 
                     mTextviewName.setText("Name: " +name);
-                    mTextviewPassword.setText("Password: " +password);
                     mTextviewNick.setText("Nick: " +nick);
-                    mTextviewEmail.setText("Email: " +email);
                     mTextviewMobile.setText("Mobile: " +mobile);
 
                 }

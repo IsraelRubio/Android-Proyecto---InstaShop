@@ -1,78 +1,135 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:orientation="vertical"
     android:padding="20dp"
     android:layout_height="match_parent"
+    android:background="@drawable/backgrounlogindark"
     tools:context=".UpdateUserRegisterActivity">
+
+    <ImageView
+        android:id="@+id/imgLogoUpdate"
+        android:contentDescription="@string/app_name"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="45dp"
+        android:src="@drawable/s1"/>
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/modify_profile"
+        android:text="Update your account"
+        android:gravity="center"
+        android:layout_marginTop="70dp"
+        android:textSize="30sp"
+        android:fontFamily="sans-serif-black"
         android:textStyle="bold"
-        android:padding="20dp"
-        android:textSize="40sp"
-        android:textColor="@android:color/holo_green_light"/>
-
-    <EditText
-        android:id="@+id/updateEditTextName"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:importantForAutofill="no"
-        android:inputType="text"
-        android:hint="@string/full_name"/>
-
-    <EditText
-        android:id="@+id/updateEditTextEmail"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:inputType="textEmailAddress"
-        android:layout_marginTop="20dp"
-        android:importantForAutofill="no"
-        android:hint="@string/email"/>
-
-    <EditText
-        android:id="@+id/updateEditTextNick"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:importantForAutofill="no"
-        android:inputType="text"
-        android:layout_marginTop="20dp"
-        android:hint="@string/nick_name"/>
-
-    <EditText
-        android:id="@+id/updateEditTextPassword"
-        android:layout_width="match_parent"
-        android:layout_marginTop="20dp"
-        android:layout_height="wrap_content"
-        android:importantForAutofill="no"
-        android:inputType="textPassword"
-        android:hint="@string/password"/>
-
-    <EditText
-        android:id="@+id/updateEditTextMobile"
-        android:layout_width="match_parent"
-        android:layout_marginTop="20dp"
-        android:layout_height="wrap_content"
-        android:inputType="number"
-        android:importantForAutofill="no"
-        android:hint="@string/mobile"/>
+        android:textColor="@android:color/white"
+        android:layout_below="@id/imgLogoUpdate"/>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="bottom"
-        android:orientation="vertical">
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginTop="310dp">
+
+        <EditText
+            android:id="@+id/updateEditTextName"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:hint="  Name"
+            android:drawableStart="@drawable/baseline_person_24"
+            android:inputType="text"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginBottom="20dp"
+            android:layout_marginTop="30dp"
+            android:paddingLeft="8dp"
+            android:importantForAutofill="no"
+            android:textColorHint="@android:color/tertiary_text_light"
+            android:background="@drawable/border"
+            android:layout_centerInParent="true"/>
+
+        <EditText
+            android:id="@+id/updateEditTextEmail"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:hint="  Email"
+            android:paddingLeft="8dp"
+            android:drawableLeft="@drawable/baseline_alternate_email_24"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginBottom="20dp"
+            android:inputType="text"
+            android:textColorHint="@android:color/tertiary_text_light"
+            android:background="@drawable/border"
+            android:layout_centerInParent="true"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginBottom="20dp"
+            android:orientation="horizontal">
+
+            <EditText
+                android:id="@+id/updateEditTextNick"
+                android:layout_width="1dp"
+                android:layout_height="50dp"
+                android:layout_weight="1"
+                android:hint="  Nick"
+                android:paddingLeft="8dp"
+                android:drawableLeft="@drawable/baseline_face_24"
+                android:inputType="text"
+                android:textColorHint="@android:color/tertiary_text_light"
+                android:background="@drawable/border"
+                android:layout_centerInParent="true"/>
+
+            <EditText
+                android:id="@+id/updateEditTextPassword"
+                android:layout_width="1dp"
+                android:layout_height="50dp"
+                android:layout_weight="1"
+                android:layout_marginLeft="20dp"
+                android:hint="  Password"
+                android:paddingLeft="8dp"
+                android:drawableLeft="@drawable/baseline_lock_24"
+                android:layout_gravity="left"
+                android:inputType="textPassword"
+                android:textColorHint="@android:color/tertiary_text_light"
+                android:background="@drawable/border"
+                android:layout_centerInParent="true"/>
+
+        </LinearLayout>
+
+        <EditText
+            android:id="@+id/updateEditTextMobile"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginBottom="20dp"
+            android:hint="  Mobile"
+            android:paddingLeft="8dp"
+            android:drawableLeft="@drawable/baseline_stay_current_portrait_24"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:inputType="textPassword"
+            android:textColorHint="@android:color/tertiary_text_light"
+            android:background="@drawable/border"
+            android:layout_centerInParent="true"/>
 
         <Button
             android:id="@+id/btnUpdate"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/check"
-            android:background="@color/colorAccent"
-            android:textColor="@android:color/white" />
+            android:text="Update"
+            android:textColor="@android:color/white"
+            android:background="@drawable/border"
+            android:layout_marginLeft="40dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginRight="40dp" />
+
     </LinearLayout>
-</LinearLayout>
+</RelativeLayout>

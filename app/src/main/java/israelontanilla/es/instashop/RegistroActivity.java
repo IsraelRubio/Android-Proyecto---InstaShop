@@ -178,7 +178,8 @@ public class RegistroActivity extends AppCompatActivity {
     }
 
     private boolean validateData(){
-        if (!name.isEmpty() || !nick.isEmpty() || !password.isEmpty() || !email.isEmpty() || mobile < 111111111)
+        if (!name.isEmpty() || !nick.isEmpty() || !password.isEmpty() || !email.isEmpty() || mobile < 111111111 ||
+        name.length() == 0 || nick.length() == 0 || password.length() == 0 || email.length() == 0 || mobile == 0)
         {
             testData = true;
 
@@ -208,14 +209,14 @@ public class RegistroActivity extends AppCompatActivity {
         {
             mEditTextName.setError("This field is required");
             mEditTextNick.setError("This field is required");
-            mEditTextMobile.setError("This field is required");
+            mEditTextMobile.setError("This mobile not is valid.");
             mEditTextPassword.setError("This field is required");
             mEditTextEmail.setError("This field is required");
             testData = false;
         }
 
         if (mobile < 600000000 || mobile > 799999999){
-            mEditTextMobile.setError("This mobile not is valid.");
+            mEditTextMobile.setError("This mobile not is valid");
             testData = false;
         }else{
             testData = true;
