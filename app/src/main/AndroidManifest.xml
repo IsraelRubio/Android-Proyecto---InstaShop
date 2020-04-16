@@ -17,7 +17,6 @@
         tools:ignore="GoogleAppIndexingWarning">
         <activity android:name=".ResetPasswordActivity" android:screenOrientation="portrait" android:theme="@style/Theme.AppCompat.Light.NoActionBar"></activity>
         <activity android:name=".UpdateUserRegisterActivity" android:screenOrientation="portrait" android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
-        <activity android:name=".ProfileActivity" android:screenOrientation="portrait" android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
         <activity android:name=".LoginActivity" android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar">
             <intent-filter>
@@ -27,7 +26,9 @@
             </intent-filter>
         </activity>
         <activity android:name=".RegistroActivity" android:screenOrientation="portrait" android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
-        <activity android:name=".MainActivity" android:theme="@style/Theme.AppCompat.Light.NoActionBar" android:screenOrientation="portrait" />
+        <activity android:name=".MainActivity" android:theme="@style/Theme.AppCompat.Light.NoActionBar" android:screenOrientation="portrait">
+
+        </activity>
     </application>
 
 </manifest>

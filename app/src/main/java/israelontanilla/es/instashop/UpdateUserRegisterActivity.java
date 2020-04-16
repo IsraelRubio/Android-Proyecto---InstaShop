@@ -121,7 +121,7 @@ public class UpdateUserRegisterActivity extends AppCompatActivity {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if (task.isComplete()){
-                    startActivity(new Intent(UpdateUserRegisterActivity.this, ProfileActivity.class));
+                    startActivity(new Intent(UpdateUserRegisterActivity.this, MainActivity.class));
                     finish();
                 }else {
                     Toast.makeText(UpdateUserRegisterActivity.this, "Could not update fields correctly", Toast.LENGTH_LONG).show();

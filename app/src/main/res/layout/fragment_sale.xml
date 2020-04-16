@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/backgrounlogindark"
+    tools:context=".Fragments.SaleFragment">
+
+    <!-- TODO: Update blank fragment layout -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:text="SALE FRAGMENT" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerViewSales"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <ImageButton
+        android:id="@+id/btnLoadDialogProduct"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:src="@drawable/ic_add_circle_black_24dp"
+        android:background="#00FFFFFF"
+        android:layout_gravity="right|bottom"
+        android:clickable="true"/>
+
+</FrameLayout>

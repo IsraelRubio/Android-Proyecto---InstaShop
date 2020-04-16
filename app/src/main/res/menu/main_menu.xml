@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/menu_profile"
+        android:title="Profile"
+        android:icon="@drawable/ic_account_circle_black_24dp"/>
+
+    <item android:id="@+id/menu_sale"
+        android:title="Sale"
+        android:icon="@drawable/ic_sale"/>
+
+    <item android:id="@+id/menu_products"
+        android:title="Products"
+        android:icon="@drawable/ic_reorder_black_24dp"/>
+
+    <item android:id="@+id/menu_help"
+        android:title="Help"
+        android:icon="@drawable/ic_help_black_24dp"/>
+</menu>

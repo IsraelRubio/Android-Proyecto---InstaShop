@@ -143,7 +143,7 @@ public class RegistroActivity extends AppCompatActivity {
                                 user.sendEmailVerification();
 
                                 // Abro el actvity hacia el que quiero ir
-                                startActivity(new Intent(RegistroActivity.this,ProfileActivity.class));
+                                startActivity(new Intent(RegistroActivity.this,MainActivity.class));
                                 finish(); // cierro este activity para que el usuario que se ha registrado, no vuelva
                             }else {
                                 Toast.makeText(RegistroActivity.this,"The data has not been saved correctly", Toast.LENGTH_LONG);

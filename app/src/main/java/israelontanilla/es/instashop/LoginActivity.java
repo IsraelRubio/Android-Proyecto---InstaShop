@@ -105,7 +105,7 @@ public class LoginActivity extends AppCompatActivity {
                     mEditTextEmail.setError("This email not is verified");
                 }else{
                     if (task.isComplete()){
-                        startActivity(new Intent(LoginActivity.this,ProfileActivity.class));
+                        startActivity(new Intent(LoginActivity.this,MainActivity.class));
                         finish();
                     }else{
                         Toast.makeText(LoginActivity.this,"Could not login to account", Toast.LENGTH_LONG).show();
@@ -122,7 +122,7 @@ public class LoginActivity extends AppCompatActivity {
         super.onStart();
 
         if (mAuth.getCurrentUser() != null){
-            startActivity(new Intent(LoginActivity.this, ProfileActivity.class));
+            startActivity(new Intent(LoginActivity.this, MainActivity.class));
             finish();
         }
     }

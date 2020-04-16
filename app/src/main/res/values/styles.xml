@@ -8,4 +8,12 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="DialogBasicCustomStyle" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <item name="android:colorAccent">#d6000d</item>
+    </style>
+
+    <style name="Theme_Dialog_Translucent" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <item name="android:windowBackground">@android:color/transparent</item>
+    </style>
+
 </resources>
