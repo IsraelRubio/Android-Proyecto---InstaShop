@@ -10,6 +10,7 @@ import android.util.Base64;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -34,8 +35,8 @@ public class LoginActivity extends AppCompatActivity {
 
     private EditText mEditTextPassword;
     private EditText mEditTextEmail;
-    private Button mbtnLogin;
-    private Button mbtnCheckInToLogin;
+    private ImageButton mbtnLogin;
+    private ImageButton mbtnCheckInToLogin;
     private Button mbtnForgotPass;
 
     private String email;
@@ -53,8 +54,8 @@ public class LoginActivity extends AppCompatActivity {
 
         mEditTextEmail = (EditText) findViewById(R.id.editTextEmail);
         mEditTextPassword = (EditText) findViewById(R.id.editTextPassword);
-        mbtnLogin = (Button) findViewById(R.id.btnLogin);
-        mbtnCheckInToLogin = (Button) findViewById(R.id.btnRegisterToLogin);
+        mbtnLogin = findViewById(R.id.btnLogin);
+        mbtnCheckInToLogin = findViewById(R.id.btnRegisterToLogin);
         mbtnForgotPass = (Button) findViewById(R.id.btnForgotPass);
 
         mAuth = FirebaseAuth.getInstance();
@@ -101,18 +102,28 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 FirebaseUser user = mAuth.getCurrentUser();
-                if (!user.isEmailVerified()){
-                    mEditTextEmail.setError("This email not is verified");
+
+                if (user==null){
+                    mEditTextEmail.setError("Check the data");
+                    mEditTextPassword.setError("check the data");
+
                 }else{
-                    if (task.isComplete()){
-                        startActivity(new Intent(LoginActivity.this,MainActivity.class));
-                        finish();
+                    if (!user.isEmailVerified()){
+                        mEditTextEmail.setError("This email not is verified");
+
                     }else{
-                        Toast.makeText(LoginActivity.this,"Could not login to account", Toast.LENGTH_LONG).show();
-                        mEditTextEmail.setError("Check the data");
-                        mEditTextPassword.setError("check the data");
+                        if (task.isComplete()){
+                            startActivity(new Intent(LoginActivity.this,MainActivity.class));
+                            finish();
+                        }else{
+                            mEditTextEmail.setError("Check the data");
+                            mEditTextPassword.setError("check the data");
+
+                        }
                     }
                 }
+
+
             }
         });
     }

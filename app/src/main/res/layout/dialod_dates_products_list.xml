@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:id="@+id/dialogProductData"
+    android:layout_width="match_parent"
+    android:background="@color/colorRinho"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:id="@+id/imageViewProductDialog"
+        android:src="@drawable/s1"
+        android:layout_gravity="center"
+        android:layout_width="50dp"
+        android:layout_height="50dp"/>
+
+    <TextView
+        android:id="@+id/textViewNameProductDialog"
+        android:text="Name"
+        android:textColor="@android:color/white"
+        android:gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:id="@+id/textViewPriceProductDialog"
+        android:text="Price"
+        android:gravity="center"
+        android:textColor="@android:color/white"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:id="@+id/textViewLocationProductDialog"
+        android:text="Price"
+        android:gravity="center"
+        android:textColor="@android:color/white"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:id="@+id/textViewDescriptionProductDialog"
+        android:text="Description"
+        android:gravity="center"
+        android:textColor="@android:color/white"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:id="@+id/textViewSellerProductDialog"
+        android:text="Seller"
+        android:gravity="center"
+        android:textColor="@android:color/white"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <Button
+        android:id="@+id/btnCallProductDialog"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/border"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:text="Call"/>
+
+</LinearLayout>

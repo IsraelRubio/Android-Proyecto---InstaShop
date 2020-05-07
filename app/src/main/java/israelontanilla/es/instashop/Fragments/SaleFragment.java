@@ -1,7 +1,9 @@
 package israelontanilla.es.instashop.Fragments;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 
@@ -12,13 +14,17 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.preference.Preference;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -29,48 +35,46 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import Models.Category;
 import Models.Product;
 import israelontanilla.es.instashop.Adapters.SaleDataAdapter;
 import israelontanilla.es.instashop.R;
 
 public class SaleFragment extends Fragment implements View.OnClickListener {
 
-    RecyclerView recyclerView;
-    ImageButton btnDialogProduct;
-    Button btnAddProduct;
-    Button btnCloseDialogAddProduct;
-    EditText editTextName;
-    EditText editTextPrice;
-    EditText editTextLocation;
-    ImageButton imageButtonAddImage;
-
-    AlertDialog dialog;
-    List<Product> productList;
-    List<String> nameList;
-    boolean testDataSale = true;
-
-    private String id;
+    private SharedPreferences preferences;
+    private RecyclerView recyclerView;
+    private ImageButton btnDialogProduct;
+    private Button btnAddProduct;
+    private Button btnCloseDialogAddProduct;
+    private EditText editTextName;
+    private static boolean testData = true;
+    private EditText editTextPrice;
+    private EditText editTextLocation;
+    private ImageButton imageButtonAddImage;
+    private AlertDialog dialog;
     private String name;
-    private double price;
+    private String price;
     private String image;
     private String location;
     private String user_seller;
     private String category;
-
-    FirebaseAuth mAuth;
-    DatabaseReference mDatabase;
-    View rootView;
-    SaleDataAdapter dataAdapter;
+    private Spinner spinnerCategories;
+    private FirebaseAuth mAuth;
+    private DatabaseReference mDatabase;
+    private View rootView;
+    private SaleDataAdapter dataAdapter;
 
     public SaleFragment() {
         // Required empty public constructor
-
     }
 
     @Override
@@ -86,13 +90,9 @@ public class SaleFragment extends Fragment implements View.OnClickListener {
         btnDialogProduct = rootView.findViewById(R.id.btnLoadDialogProduct);
         recyclerView = rootView.findViewById(R.id.recyclerViewSales);
         recyclerView.setLayoutManager(new GridLayoutManager(rootView.getContext(),2));
-
-        productList = new ArrayList<>();
+        preferences = rootView.getContext().getSharedPreferences("preferences", Context.MODE_PRIVATE);
 
         loadDataSale();
-
-        dataAdapter = new SaleDataAdapter(productList);
-        recyclerView.setAdapter(dataAdapter);
 
         btnDialogProduct.setOnClickListener(this);
 
@@ -100,147 +100,261 @@ public class SaleFragment extends Fragment implements View.OnClickListener {
         return rootView;
     }
 
-    private void loadDataSale() {
-        String idProduct = mDatabase.child("Products").getKey();
-        String idUser = mAuth.getCurrentUser().getUid();
-        mDatabase.child("Products").child(idUser).orderByChild("name").addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                String mName = dataSnapshot.child("name").getValue().toString();
-                String mPrice = dataSnapshot.child("price").getValue().toString();
-                String mImage = "image";
-                String mCategory = "mCategory";
-                String mUser_seller = "seller";
-                String mLocation = dataSnapshot.child("location").getValue().toString();
-
-                System.out.println("*********************************************************************************************************");
-                System.out.println("Name " +mName);
-                System.out.println("Price " +mPrice);
-                System.out.println("Imagen " +mImage);
-                System.out.println("Category " +mCategory);
-                System.out.println("User " +mUser_seller);
-                System.out.println("Location " +mLocation);
-                System.out.println("************************************************************************************************************");
-
-                productList.add(new Product(
-                        mName,
-                        Double.valueOf(mPrice),
-                        mImage,
-                        mLocation,
-                        mUser_seller,
-                        mCategory
-                ));
-            }
-
-            @Override
-            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-            }
-
-            @Override
-            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
-
-            }
-
-            @Override
-            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-    }
-
-    boolean testNameSale(){
-
-        mDatabase.child("Users").child(mAuth.getCurrentUser().getUid()).child("Products").orderByChild("name").addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                nameList.add(dataSnapshot.child("name").getValue().toString());
-
-                System.out.println("LISTA DE NICKS");
-                for (String n : nameList){
-                    System.out.println("LISTA" + name);
-                    if (name.equals(n)){
-                        //mEditTextNick.setError("This nick already exist");
-                        System.out.println("Repetido -> " +n);
-                        testDataSale = false;
-                    }else{
-                        testDataSale = true;
-                    }
-                }
-            }
-
-            @Override
-            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-            }
-
-            @Override
-            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
-
-            }
-
-            @Override
-            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-
-        return testDataSale;
-    }
-
-    void createProduct(){
-        String idUser = mAuth.getCurrentUser().getUid();
-
-
-        name = editTextName.getText().toString();
-        price = Double.valueOf(editTextPrice.getText().toString());
-        image = "image";
-        location = editTextLocation.getText().toString();
-        user_seller = "user seller";
-        category = "mi category";
-
-        final Map<String, Object> map = new HashMap<>();
-
-        map.put("name", name);
-        map.put("price", price);
-        map.put("image", image);
-        map.put("location", location);
-        map.put("user_seller", user_seller);
-        map.put("category",category);
-
-        mDatabase.child("Products").child(idUser).child(name).setValue(map).addOnCompleteListener(new OnCompleteListener<Void>() {
-            @Override
-            public void onComplete(@NonNull Task<Void> task) {
-                if (task.isSuccessful()){
-                    dialog.dismiss();
-                }else{
-                    Toast.makeText(rootView.getContext(), "La subida del producto ha sido un fracaso", Toast.LENGTH_SHORT);
-                }
-            }
-        });
-    }
-
     @Override
     public void onClick(View v) {
-            switch (v.getId()) {
-                case R.id.btnLoadDialogProduct:
-                    loadDialogAddProduct();
-                    break;
+        switch (v.getId()) {
+            case R.id.btnLoadDialogProduct:
+                loadDialogAddProduct();
+                break;
+        }
+    }
 
+    private void loadDataSale() {
+
+        //----------------------------------------------------------------------------------------
+        mDatabase.child("Products").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull final DataSnapshot dataSnapshotProduct) {
+
+                // Saco el id del user actual y creo la query
+                //----------------------------------------------------------
+                String id = "";
+                if(mAuth.getCurrentUser() != null)
+                    id = mAuth.getCurrentUser().getUid();
+
+                Query query = mDatabase.child("Users").child(id);
+                //-----------------------------------------------------------
+
+                // En la query para sacar el nombre del user creo el producto
+                //---------------------------------------------------------------
+                query.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshotUser) {
+
+                        // Consulto todos los productos e ingreso a la lista solo los productos de este usuario
+                        //-------------------------------------------------------------------
+                        List<Product> productList = new ArrayList<>();
+                        for (DataSnapshot data : dataSnapshotProduct.getChildren()){
+                            Product p = data.getValue(Product.class);
+
+                            String nick = dataSnapshotUser.child("nick").getValue().toString();
+
+                            if (p.getSeller().equals(nick))
+                                productList.add(p);
+                        }
+
+                        // Instancio el adaptador y se lo añado al recyclerview
+                        dataAdapter = new SaleDataAdapter(productList);
+                        recyclerView.setAdapter(dataAdapter);
+                        //---------------------------------------------------------------------
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
+                //----------------------------------------------------------
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+        //-------------------------------------------------------------------------------------
+    }
+
+    private void createProduct(){
+
+        // Saco el id del user actual y creo la query
+        //----------------------------------------------------------
+        String id = "";
+        if(mAuth.getCurrentUser() != null)
+            id = mAuth.getCurrentUser().getUid();
+
+        final Query query = mDatabase.child("Users").child(id);
+        //-----------------------------------------------------------
+            if (CheckData()) {
+                // En la query para sacar el nombre del user, creo el producto
+                //---------------------------------------------------------------
+                query.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull final DataSnapshot dataSnapshotSeller) {
+
+                        //*********************************************************************************
+                        Query q = mDatabase.child("Products").orderByChild("name");
+
+                        q.addListenerForSingleValueEvent(new ValueEventListener() {
+                            @SuppressLint("CommitPrefEdits")
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshotName) {
+                                boolean isTrue = false;
+                                if (dataSnapshotName.exists()){
+                                    String nameCheck = editTextName.getText().toString();
+                                    isTrue = true;
+                                    for (DataSnapshot data : dataSnapshotName.getChildren()){
+                                        String name = String.valueOf(data.child("name").getValue());
+                                        if (nameCheck.toLowerCase().equals(name.toLowerCase()))
+                                            isTrue = false;
+                                    }
+                                }else {
+                                    isTrue = true;
+                                }
+
+                                preferences.edit().putString("category", spinnerCategories.getItemAtPosition(8).toString());
+
+                                spinnerCategories.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                                    @Override
+                                    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                                            preferences.edit().putString("category", parent.getItemAtPosition(position).toString()).apply();
+                                    }
+
+                                    @Override
+                                    public void onNothingSelected(AdapterView<?> parent) {
+
+                                    }
+                                });
+
+                                if (isTrue) {
+                                    //-------------------------------------------------------------------
+                                    // Saco los datos del formulario e instancio el producto
+                                    //--------------------------------------------------------
+                                    name = editTextName.getText().toString();
+                                    price = editTextPrice.getText().toString();
+                                    image = "image";
+                                    location = editTextLocation.getText().toString();
+                                    user_seller = String.valueOf(dataSnapshotSeller.child("nick").getValue());
+                                    category = preferences.getString("category", "");
+                                    if (category.trim().equals(""))
+                                        category = "other";
+
+                                    Query queryMobile = mDatabase.child("Users").child(mAuth.getCurrentUser().getUid());
+                                    queryMobile.addListenerForSingleValueEvent(new ValueEventListener() {
+                                        @Override
+                                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                            String mobile = String.valueOf(dataSnapshot.child("mobile").getValue());
+
+                                            Product product = new Product(name, price, image, location, user_seller, category, mobile);
+                                            String productKey = mDatabase.child("Products").push().getKey();
+                                            //---------------------------------------------------------
+
+                                            // Añado el producto a la base de datos
+                                            //--------------------------------------------------------------------------
+                                            mDatabase.child("Products").child(productKey).setValue(product).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                @Override
+                                                public void onComplete(@NonNull Task<Void> task) {
+                                                    if (task.isSuccessful()) {
+                                                        dialog.dismiss();
+                                                    } else {
+                                                        Toast.makeText(rootView.getContext(), "La subida del producto ha sido un fracaso", Toast.LENGTH_SHORT);
+                                                    }
+                                                }
+                                            });
+                                        }
+
+                                        @Override
+                                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                        }
+                                    });
+
+
+
+                                }else {
+                                    editTextName.setError("This name is already exist!!");
+                                }
+                                //---------------------------------------------------------------------------
+                                //--------------------------------------------------------------------
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                            }
+                        });
+                        //*********************************************************************************
+
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
+                //----------------------------------------------------------
+            }else{
+                Toast.makeText(rootView.getContext(), "There is a problem with the data entered", Toast.LENGTH_LONG).show();
             }
     }
 
-    void loadDialogAddProduct() {
+    private boolean CheckData(){
+
+        if (editTextName.getText().toString().trim().isEmpty() ||
+                editTextLocation.getText().toString().trim().isEmpty() ||
+                    editTextPrice.getText().toString().trim().isEmpty()){
+
+            editTextName.setError("Fill in all the fields");
+            editTextPrice.setError("Fill in all the fields");
+            editTextLocation.setError("Fill in all the fields");
+            testData = false;
+        }else{
+            if (isDouble(editTextPrice.getText().toString()))
+                testData = true;
+            else {
+                editTextPrice.setError("This value not is numeric");
+                testData = false;
+            }
+        }
+
+
+        return testData;
+    }
+
+    static boolean isDouble(String cadena) {
+
+        boolean resultado;
+
+        try {
+            Double.parseDouble(cadena);
+            resultado = true;
+        } catch (NumberFormatException excepcion) {
+            resultado = false;
+        }
+
+        return resultado;
+    }
+
+    private void loadCategories(final View viewDialog){
+        final List<Category> categoryList = new ArrayList<>();
+
+        mDatabase.child("Categories").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()){
+                    for (DataSnapshot data : dataSnapshot.getChildren()){
+                        String id = data.getKey();
+                        String category = String.valueOf(data.child("category").getValue());
+
+                        categoryList.add(new Category(id, category));
+                    }
+
+                    ArrayAdapter<Category> adapterCategory = new ArrayAdapter<>(viewDialog.getContext(), R.layout.support_simple_spinner_dropdown_item, categoryList);
+                    spinnerCategories.setAdapter(adapterCategory);
+                    spinnerCategories.setSelection(8);
+                    preferences.edit().putString("category", "");
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    private void loadDialogAddProduct() {
+
         AlertDialog.Builder builder = new AlertDialog.Builder(rootView.getContext(),R.style.Theme_Dialog_Translucent);
 
         LayoutInflater inflater = getLayoutInflater();
@@ -257,6 +371,9 @@ public class SaleFragment extends Fragment implements View.OnClickListener {
         editTextLocation = viewDialog.findViewById(R.id.edittextSaleLocation);
         editTextPrice = viewDialog.findViewById(R.id.edittextSalePrice);
         imageButtonAddImage = viewDialog.findViewById(R.id.imageButtonAddImageSale);
+        spinnerCategories = viewDialog.findViewById(R.id.spinnerCategory);
+
+        loadCategories(viewDialog);
 
         btnAddProduct = viewDialog.findViewById(R.id.btnAddProduct);
         btnAddProduct.setOnClickListener(new View.OnClickListener() {
@@ -274,4 +391,6 @@ public class SaleFragment extends Fragment implements View.OnClickListener {
             }
         });
     }
+
+
 }

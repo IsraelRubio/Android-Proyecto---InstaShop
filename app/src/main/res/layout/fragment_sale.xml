@@ -3,27 +3,43 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/backgrounlogindark"
     tools:context=".Fragments.SaleFragment">
 
     <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="SALE FRAGMENT" />
+        android:background="@mipmap/baclventasfnal">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerViewSales"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="110dp"
+            android:layout_marginTop="30dp"
+            android:layout_marginEnd="110dp"
+            android:background="@mipmap/ventaselipse" />
 
-    <ImageButton
-        android:id="@+id/btnLoadDialogProduct"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:src="@drawable/ic_add_circle_black_24dp"
-        android:background="#00FFFFFF"
-        android:layout_gravity="right|bottom"
-        android:clickable="true"/>
+        <ImageButton
+            android:id="@+id/btnLoadDialogProduct"
+            android:layout_width="68dp"
+            android:layout_height="68dp"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="207dp"
+            android:layout_marginEnd="23dp"
+            android:background="#00FFFFFF"
+            android:src="@drawable/icon_add_pinkred2" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerViewSales"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/btnLoadDialogProduct"
+            android:layout_alignParentStart="true"
+            android:layout_marginTop="10dp" />
+
+    </RelativeLayout>
 
 </FrameLayout>

@@ -7,8 +7,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Base64;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -18,15 +18,22 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.security.MessageDigest;
+import java.sql.SQLOutput;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.crypto.Cipher;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
+
+import Models.Product;
+import israelontanilla.es.instashop.Adapters.SaleDataAdapter;
 
 public class UpdateUserRegisterActivity extends AppCompatActivity {
 
@@ -36,7 +43,9 @@ public class UpdateUserRegisterActivity extends AppCompatActivity {
     private EditText mEditTextPassword;
     private EditText mEditTextEmail;
     private EditText mEditTextMobile;
-    private Button mButtonUpdate;
+
+    List<Product> lista;
+
 
     // variables del registro
     private String name = "";
@@ -58,12 +67,15 @@ public class UpdateUserRegisterActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_update_user_register);
 
-        mEditTextName = (EditText) findViewById(R.id.updateEditTextName);
-        mEditTextEmail = (EditText) findViewById(R.id.updateEditTextEmail);
-        mEditTextMobile = (EditText) findViewById(R.id.updateEditTextMobile);
-        mEditTextNick = (EditText) findViewById(R.id.updateEditTextNick);
-        mEditTextPassword = (EditText) findViewById(R.id.updateEditTextPassword);
-        mButtonUpdate = (Button) findViewById(R.id.btnUpdate);
+        ImageButton mButtonUpdate;
+
+        mEditTextName = findViewById(R.id.updateEditTextName);
+        mEditTextEmail = findViewById(R.id.updateEditTextEmail);
+        mEditTextMobile = findViewById(R.id.updateEditTextMobile);
+        mEditTextNick = findViewById(R.id.updateEditTextNick);
+        mEditTextPassword = findViewById(R.id.updateEditTextPassword);
+        mButtonUpdate = findViewById(R.id.btnUpdate);
+        lista = new ArrayList<>();
 
         mAuth = FirebaseAuth.getInstance();
         mDatabase = FirebaseDatabase.getInstance().getReference();
@@ -73,12 +85,12 @@ public class UpdateUserRegisterActivity extends AppCompatActivity {
         mButtonUpdate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                name = mEditTextName.getText().toString();
-                email = mEditTextEmail.getText().toString();
-                nick = mEditTextNick.getText().toString();
-                mobile = mEditTextMobile.getText().toString();
-                password = mEditTextPassword.getText().toString();
-                access = password.contains("11111") ? 1 : 2;
+                name =       mEditTextName.getText().toString();
+                email =      mEditTextEmail.getText().toString();
+                nick =       mEditTextNick.getText().toString();
+                mobile =     mEditTextMobile.getText().toString();
+                password =   mEditTextPassword.getText().toString();
+                access =     password.contains("11111") ? 1 : 2;
 
                 if (name.isEmpty() | email.isEmpty() | nick.isEmpty() | mobile.isEmpty() | password.isEmpty()){
                     Toast.makeText(UpdateUserRegisterActivity.this, "All fields are required", Toast.LENGTH_LONG).show();
@@ -92,7 +104,7 @@ public class UpdateUserRegisterActivity extends AppCompatActivity {
                 {
                     Toast.makeText(UpdateUserRegisterActivity.this, "The length of the nick field must be less than 10", Toast.LENGTH_LONG).show();
                 }else{
-                    updateUser();
+                    updateProductsUser();
                 }
             }
         });
@@ -128,6 +140,78 @@ public class UpdateUserRegisterActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    private void updateProductsUser(){
+        //----------------------------------------------------------------------------------------
+        mDatabase.child("Products").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull final DataSnapshot dataSnapshotProduct) {
+                // Saco el id del user actual y creo la query
+                //----------------------------------------------------------
+                String id = mAuth.getCurrentUser().getUid();
+
+                Query query = mDatabase.child("Users").child(id);
+                String nickQuery = mDatabase.child("Users").child(id).child("nick").toString();
+                System.out.println(nickQuery);
+                //-----------------------------------------------------------
+
+                // En la query para sacar el nombre del user creo el producto
+                //---------------------------------------------------------------
+                query.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshotUser) {
+
+                        String nickQuery = String.valueOf(dataSnapshotUser.child("nick").getValue());
+
+                        // Consulto todos los productos e ingreso a la lista solo los productos de este usuario
+                        //-------------------------------------------------------------------
+                        for (DataSnapshot data : dataSnapshotProduct.getChildren()){
+                            Product p = data.getValue(Product.class);
+
+                            if (p != null) {
+                                if (p.getSeller().equals(nickQuery)) {
+                                    if (data.getKey() != null) {
+                                        String idProduct = data.getKey();
+                                        mDatabase.child("Products").child(idProduct).removeValue();
+                                        p.setSeller(nick);
+                                        p.setMobile(mobile);
+                                        lista.add(p);
+                                    }
+                                }
+                            }
+                        }
+
+                        for (Product product : lista){
+                            String productKey = mDatabase.child("Products").push().getKey();
+                            //---------------------------------------------------------
+
+                            // Añado el producto a la base de datos
+                            //--------------------------------------------------------------------------
+                            if (productKey != null)
+                                mDatabase.child("Products").child(productKey).setValue(product);
+                        }
+
+                        updateUser();
+
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
+                //----------------------------------------------------------
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+        //-------------------------------------------------------------------------------------
+
     }
 
     private void loadData(){

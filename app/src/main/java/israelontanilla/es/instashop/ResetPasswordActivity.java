@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -19,7 +20,7 @@ import com.google.firebase.auth.FirebaseAuth;
 
 public class ResetPasswordActivity extends AppCompatActivity {
 
-    private Button mbtnResetPassword;
+    private ImageButton mbtnResetPassword;
     private EditText mEditTextEmail;
 
     String email;
@@ -32,8 +33,8 @@ public class ResetPasswordActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_reset_password);
 
-        mbtnResetPassword = (Button) findViewById(R.id.btnResetPassword);
-        mEditTextEmail = (EditText) findViewById(R.id.editTextEmailReset);
+        mbtnResetPassword = findViewById(R.id.btnResetPassword);
+        mEditTextEmail = findViewById(R.id.editTextEmailReset);
 
         mAuth = FirebaseAuth.getInstance();
         mDialog = new ProgressDialog(ResetPasswordActivity.this);

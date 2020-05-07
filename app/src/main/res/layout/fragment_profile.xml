@@ -1,114 +1,145 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".Fragments.ProfileFragment">
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:orientation="vertical"
         android:layout_height="match_parent"
-        android:background="@drawable/backgrounlogindark">
-        <ImageView
-            android:contentDescription="@string/app_name"
-            android:layout_marginTop="10dp"
-            android:layout_width="150dp"
-            android:layout_height="100dp"
-            android:layout_gravity="center"
-            android:src="@drawable/s1"/>
-
+        android:id="@+id/layoutprofile"
+        android:background="@mipmap/backprofile">
 
 
         <ImageButton
             android:id="@+id/btnAddImage"
-            android:layout_width="120dp"
-            android:layout_height="120dp"
-            android:layout_marginLeft="10dp"
-            android:background="@drawable/border"/>
+            android:background="@mipmap/profileelipse"
+            android:layout_width="180dp"
+            android:layout_height="180dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.050000000" />
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <TextView
-                android:id="@+id/viewName"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:textStyle="bold"
-                android:textSize="15sp"
-                android:text="@string/Name"
-                android:layout_weight="1"
-                android:textColor="@android:color/white"/>
-
-            <Button
-                android:id="@+id/btnUpdateProfile"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_gravity="right"
-                android:layout_weight="1"
-                android:background="#00000000"
-                android:text="Update Profile"
-                android:textColor="@android:color/white" />
-        </LinearLayout>
+        <ImageButton
+            android:id="@+id/btnUpdateProfile"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_alignTop="@+id/btnAddImage"
+            android:layout_toEndOf="@+id/btnAddImage"
+            android:background="@mipmap/editicon"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/btnAddImage"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.320000"/>
 
         <TextView
             android:id="@+id/viewNick"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="15sp"
-            android:text="@string/Nick"
+            android:layout_marginStart="28dp"
+            android:layout_marginTop="250dp"
+            android:layout_marginEnd="100dp"
+            android:fontFamily="sans-serif-condensed"
+            android:text="NICK"
+            android:textColor="#27496D"
+            android:textSize="24sp"
             android:textStyle="bold"
-            android:layout_marginLeft="10dp"
-            android:textColor="@android:color/white"/>
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.120000005" />
+
+        <ImageButton
+            android:id="@+id/btnSingOut"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_alignTop="@+id/viewNick"
+            android:layout_toEndOf="@+id/viewNick"
+            android:background="@mipmap/shutdownicon"
+            app:layout_constraintStart_toStartOf="@+id/viewNick"
+            app:layout_constraintTop_toBottomOf="@+id/viewNick" />
+
+        <ImageButton
+            android:id="@+id/btnDeleteProfile"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_alignTop="@+id/viewNick"
+            android:layout_marginStart="40dp"
+            android:layout_toEndOf="@+id/viewNick"
+            android:background="@mipmap/deleteicon"
+            app:layout_constraintStart_toStartOf="@+id/btnSingOut"
+            app:layout_constraintTop_toBottomOf="@+id/viewNick" />
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="28dp"
+            android:layout_marginTop="60dp"
+            android:fontFamily="sans-serif-condensed"
+            android:text="Name"
+            android:textColor="#142850"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/viewNick" />
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="28dp"
+            android:layout_marginTop="32dp"
+            android:fontFamily="sans-serif-condensed"
+            android:text="Mobile"
+            android:textColor="#142850"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/viewName" />
 
         <TextView
             android:id="@+id/viewMobile"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textStyle="bold"
-            android:textSize="15sp"
-            android:text="@string/Mobile"
-            android:layout_marginLeft="10dp"
-            android:textColor="@android:color/white" />
-
-        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:gravity="bottom">
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="28dp"
+            android:layout_marginTop="4dp"
+            android:fontFamily="sans-serif-condensed"
+            android:text="Mobile"
+            android:textColor="#27496D"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView2" />
 
-            <Button
-                android:id="@+id/btnSingOut"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/sing_out"
-                android:textColor="@android:color/white"
-                android:layout_marginBottom="10dp"
-                android:layout_marginLeft="30dp"
-                android:layout_marginRight="30dp"
-                android:background="@android:color/holo_blue_light"
-                android:padding="5dp"
-                style="@style/AppTheme"
-                android:textSize="20sp"/>
+        <TextView
+            android:id="@+id/viewName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="28dp"
+            android:layout_marginTop="4dp"
+            android:fontFamily="sans-serif-condensed"
+            android:text="Name"
+            android:textColor="#27496D"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView" />
 
-            <Button
-                android:id="@+id/btnDeleteProfile"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/delete_profile"
-                android:layout_marginBottom="30dp"
-                android:layout_marginLeft="30dp"
-                android:layout_marginRight="30dp"
-                android:textColor="@android:color/white"
-                android:background="@android:color/holo_red_light"
-                android:padding="5dp"
-                style="@style/AppTheme"
-                android:textSize="20sp"/>
 
-        </LinearLayout>
-    </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </FrameLayout>

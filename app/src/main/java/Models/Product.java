@@ -1,88 +1,99 @@
 package Models;
 
 public class Product {
-    private String nombre;
-    private double precio;
-    private String imagen;
-    private String ubicacion;
-    private String vendedor;
-    private String categoria;
+    private String name;
+    private String price;
+    private String image;
+    private String location;
+    private String seller;
+    private String category;
+    private String mobile;
 
     public Product() {
-        this.nombre = "Default";
-        this.precio = 0;
-        this.imagen = "Default";
-        this.ubicacion = "Default";
-        this.vendedor = "Default";
-        this.categoria = "Default";
+        this.name = "Default";
+        this.price = "Default";
+        this.image = "Default";
+        this.location = "Default";
+        this.seller = "Default";
+        this.category = "Default";
+        this.mobile = "Default";
     }
 
-    public Product(String nombre, double precio, String imagen, String ubicacion, String vendedor, String categoria) {
-        this.nombre = nombre;
-        this.precio = precio;
-        this.imagen = imagen;
-        this.ubicacion = ubicacion;
-        this.vendedor = vendedor;
-        this.categoria = categoria;
+    public Product(String name, String price, String image, String location, String seller, String category, String mobile) {
+        this.name = name;
+        this.price = price;
+        this.image = image;
+        this.location = location;
+        this.seller = seller;
+        this.category = category;
+        this.mobile = mobile;
     }
 
-    public String getNombre() {
-        return nombre;
+    public String getName() {
+        return name;
     }
 
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public double getPrecio() {
-        return precio;
+    public String getPrice() {
+        return price;
     }
 
-    public void setPrecio(double precio) {
-        this.precio = precio;
+    public String getMobile() {
+        return mobile;
     }
 
-    public String getImagen() {
-        return imagen;
+    public void setMobile(String mobile) {
+        this.mobile = mobile;
     }
 
-    public void setImagen(String imagen) {
-        this.imagen = imagen;
+    public void setPrice(String price) {
+        this.price = price;
     }
 
-    public String getUbicacion() {
-        return ubicacion;
+    public String getImage() {
+        return image;
     }
 
-    public void setUbicacion(String ubicacion) {
-        this.ubicacion = ubicacion;
+    public void setImage(String image) {
+        this.image = image;
     }
 
-    public String getVendedor() {
-        return vendedor;
+    public String getLocation() {
+        return location;
     }
 
-    public void setVendedor(String vendedor) {
-        this.vendedor = vendedor;
+    public void setLocation(String location) {
+        this.location = location;
     }
 
-    public String getCategoria() {
-        return categoria;
+    public String getSeller() {
+        return seller;
     }
 
-    public void setCategoria(String categoria) {
-        this.categoria = categoria;
+    public void setSeller(String seller) {
+        this.seller = seller;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
     }
 
     @Override
     public String toString() {
         return "Product{" +
-                "nombre='" + nombre + '\'' +
-                ", precio=" + precio +
-                ", imagen='" + imagen + '\'' +
-                ", ubicacion='" + ubicacion + '\'' +
-                ", vendedor='" + vendedor + '\'' +
-                ", categoria='" + categoria + '\'' +
+                "name='" + name + '\'' +
+                ", price='" + price + '\'' +
+                ", image='" + image + '\'' +
+                ", location='" + location + '\'' +
+                ", seller='" + seller + '\'' +
+                ", category='" + category + '\'' +
                 '}';
     }
 }

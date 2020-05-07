@@ -1,135 +1,125 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:orientation="vertical"
-    android:padding="20dp"
     android:layout_height="match_parent"
-    android:background="@drawable/backgrounlogindark"
     tools:context=".UpdateUserRegisterActivity">
 
-    <ImageView
-        android:id="@+id/imgLogoUpdate"
-        android:contentDescription="@string/app_name"
-        android:layout_width="150dp"
-        android:layout_height="150dp"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="45dp"
-        android:src="@drawable/s1"/>
-
-    <TextView
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Update your account"
-        android:gravity="center"
-        android:layout_marginTop="70dp"
-        android:textSize="30sp"
-        android:fontFamily="sans-serif-black"
-        android:textStyle="bold"
-        android:textColor="@android:color/white"
-        android:layout_below="@id/imgLogoUpdate"/>
+        android:background="@mipmap/backprofile"
+        android:layout_height="match_parent">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_marginTop="310dp">
+        <ImageButton
+            android:id="@+id/imageProfileEdit"
+            android:background="@mipmap/profileelipse"
+            android:layout_width="180dp"
+            android:layout_height="180dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.050000000" />
+
 
         <EditText
             android:id="@+id/updateEditTextName"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:hint="  Name"
-            android:drawableStart="@drawable/baseline_person_24"
-            android:inputType="text"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
-            android:layout_marginBottom="20dp"
-            android:layout_marginTop="30dp"
-            android:paddingLeft="8dp"
-            android:importantForAutofill="no"
-            android:textColorHint="@android:color/tertiary_text_light"
             android:background="@drawable/border"
-            android:layout_centerInParent="true"/>
+            android:drawableStart="@drawable/baseline_person_24"
+            android:hint="  Name"
+            android:layout_margin="20dp"
+            android:importantForAutofill="no"
+            android:inputType="text"
+            android:paddingLeft="8dp"
+            android:textColorHint="@android:color/tertiary_text_light"
+            app:layout_constraintStart_toStartOf="@id/updateEditTextNick"
+            app:layout_constraintTop_toBottomOf="@id/updateEditTextNick" />
 
         <EditText
             android:id="@+id/updateEditTextEmail"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:hint="  Email"
-            android:paddingLeft="8dp"
-            android:drawableLeft="@drawable/baseline_alternate_email_24"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
-            android:layout_marginBottom="20dp"
-            android:inputType="text"
-            android:textColorHint="@android:color/tertiary_text_light"
+            android:layout_centerInParent="true"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="300dp"
+            android:layout_marginEnd="20dp"
             android:background="@drawable/border"
-            android:layout_centerInParent="true"/>
+            android:drawableLeft="@drawable/baseline_alternate_email_24"
+            android:hint="  Email"
+            android:inputType="textEmailAddress"
+            android:paddingLeft="8dp"
+            android:textColorHint="@android:color/tertiary_text_light"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.0" />
 
-        <LinearLayout
+        <EditText
+            android:id="@+id/updateEditTextNick"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
-            android:layout_marginBottom="20dp"
-            android:orientation="horizontal">
+            android:layout_height="50dp"
+            android:background="@drawable/border"
+            android:drawableLeft="@drawable/baseline_face_24"
+            android:hint="  Nick"
+            android:layout_marginEnd="20dp"
+            android:layout_marginTop="20dp"
+            android:inputType="text"
+            android:paddingLeft="8dp"
+            android:textColorHint="@android:color/tertiary_text_light"
+            android:layout_marginStart="20dp"
+            app:layout_constraintStart_toStartOf="@id/updateEditTextPassword"
+            app:layout_constraintTop_toBottomOf="@+id/updateEditTextPassword" />
 
-            <EditText
-                android:id="@+id/updateEditTextNick"
-                android:layout_width="1dp"
-                android:layout_height="50dp"
-                android:layout_weight="1"
-                android:hint="  Nick"
-                android:paddingLeft="8dp"
-                android:drawableLeft="@drawable/baseline_face_24"
-                android:inputType="text"
-                android:textColorHint="@android:color/tertiary_text_light"
-                android:background="@drawable/border"
-                android:layout_centerInParent="true"/>
-
-            <EditText
-                android:id="@+id/updateEditTextPassword"
-                android:layout_width="1dp"
-                android:layout_height="50dp"
-                android:layout_weight="1"
-                android:layout_marginLeft="20dp"
-                android:hint="  Password"
-                android:paddingLeft="8dp"
-                android:drawableLeft="@drawable/baseline_lock_24"
-                android:layout_gravity="left"
-                android:inputType="textPassword"
-                android:textColorHint="@android:color/tertiary_text_light"
-                android:background="@drawable/border"
-                android:layout_centerInParent="true"/>
-
-        </LinearLayout>
+        <EditText
+            android:id="@+id/updateEditTextPassword"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
+            android:layout_gravity="left"
+            android:background="@drawable/border"
+            android:drawableLeft="@drawable/baseline_lock_24"
+            android:hint="  Password"
+            android:inputType="text"
+            android:paddingLeft="8dp"
+            android:textColorHint="@android:color/tertiary_text_light"
+            app:layout_constraintStart_toStartOf="@+id/updateEditTextEmail"
+            app:layout_constraintTop_toBottomOf="@+id/updateEditTextEmail" />
 
         <EditText
             android:id="@+id/updateEditTextMobile"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:layout_marginBottom="20dp"
-            android:hint="  Mobile"
-            android:paddingLeft="8dp"
+            android:layout_centerInParent="true"
+            android:background="@drawable/border"
             android:drawableLeft="@drawable/baseline_stay_current_portrait_24"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
-            android:inputType="textPassword"
+            android:hint="  Mobile"
+            android:layout_margin="20dp"
+            android:inputType="phone"
+            android:paddingLeft="8dp"
             android:textColorHint="@android:color/tertiary_text_light"
-            android:background="@drawable/border"
-            android:layout_centerInParent="true"/>
+            app:layout_constraintStart_toStartOf="@id/updateEditTextName"
+            app:layout_constraintTop_toBottomOf="@id/updateEditTextName" />
 
-        <Button
+        <ImageButton
             android:id="@+id/btnUpdate"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Update"
-            android:textColor="@android:color/white"
-            android:background="@drawable/border"
-            android:layout_marginLeft="40dp"
-            android:layout_marginTop="20dp"
-            android:layout_marginRight="40dp" />
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_alignTop="@+id/imageProfileEdit"
+            android:layout_toEndOf="@+id/imageProfileEdit"
+            android:background="@mipmap/btnupdate"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/imageProfileEdit"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.320000"/>
 
-    </LinearLayout>
-</RelativeLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</FrameLayout>

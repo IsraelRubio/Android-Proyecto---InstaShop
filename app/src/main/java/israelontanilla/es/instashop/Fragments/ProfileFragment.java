@@ -4,12 +4,14 @@ package israelontanilla.es.instashop.Fragments;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.ContentResolver;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
-
+import java.io.*;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -19,15 +21,24 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.MimeTypeMap;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.firebase.auth.AuthCredential;
+import com.google.firebase.auth.EmailAuthCredential;
+import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -46,18 +57,18 @@ import israelontanilla.es.instashop.UpdateUserRegisterActivity;
 public class ProfileFragment extends Fragment {
 
     //-------------------------------------------------------------------------------
-    private Button mBtnSingOut;
-    private Button mBtnDeleteProfile;
-    private Button mBtnUpdateProfile;
+    private ImageButton mBtnSingOut;
+    private ImageButton mBtnDeleteProfile;
+    private ImageButton mBtnUpdateProfile;
     private ImageButton mBtnAddImage;
     private TextView mTextviewName;
     private TextView mTextviewNick;
     private TextView mTextviewMobile;
-
+    private Uri mImageUri;
     private Bitmap bitmap = null;
     private ProgressDialog mProgressDialog;
-    private Uri mUri;
-
+    private View rootView;
+    private static int LOAD_IMAGE_RESULT = 1;
     private UploadTask uploadTask;
     private FirebaseAuth mAuth;
     private DatabaseReference mDatabase;
@@ -74,11 +85,11 @@ public class ProfileFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, final ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        final View rootView = inflater.inflate(R.layout.fragment_profile, container, false);
+        rootView = inflater.inflate(R.layout.fragment_profile, container, false);
 
         mAuth = FirebaseAuth.getInstance();
         mDatabase = FirebaseDatabase.getInstance().getReference();
-        mStorage = FirebaseStorage.getInstance().getReference().child("imageProfile");
+        mStorage = FirebaseStorage.getInstance().getReference("Images");
         mProgressDialog = new ProgressDialog(rootView.getContext());
 
         mTextviewName = rootView.findViewById(R.id.viewName);
@@ -127,6 +138,7 @@ public class ProfileFragment extends Fragment {
                 mBuild.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
+                        deleteProductsOfUser();
                         deleteUser();
                         mAuth.signOut();
                         startActivity(new Intent(rootView.getContext(), LoginActivity.class));
@@ -156,7 +168,7 @@ public class ProfileFragment extends Fragment {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         startActivity(new Intent(rootView.getContext(), UpdateUserRegisterActivity.class));
-
+                        dialog.cancel();
                     }
                 });
 
@@ -177,28 +189,16 @@ public class ProfileFragment extends Fragment {
             public void onClick(View v) {
                 AlertDialog.Builder iBuild = new AlertDialog.Builder(rootView.getContext());
                 iBuild.setTitle("Add image");
-                iBuild.setMessage("do you want add image in your user account?");
+                iBuild.setMessage("do you want update image in your user account?");
                 iBuild.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
 
                         //---------------------------------------------------------------------------
-                        Intent intent = new Intent();
-                        intent.setType("image/*"); // cualquier tipo de imagen
-                        intent.setAction(Intent.ACTION_GET_CONTENT); // Abrir galeria
-
-                        // devuelve un resultado en formato uri que convertire a bitmap
-                        // le asigno al Uri el dato/archivo seleccionado de en este caso la galeria
-                        startActivityForResult(Intent.createChooser(intent,"Select an image"), 1);
-
-                        if (mUri != null){
-                            Log.i("TAG","Mi uri no es null");
-                            final StorageReference imagenRef = mStorage.child(mUri.getLastPathSegment());
-
-                            uploadTask = imagenRef.putFile(mUri);
-
-
-                        }
+                        // Seleccionar archivo
+                        Filechooser();
+                        System.out.println("FILECHOOSER - HA SALIDO");
+                        Fileuploader();
                         //---------------------------------------------------------------------------
 
                     }
@@ -219,6 +219,51 @@ public class ProfileFragment extends Fragment {
         return rootView;
     }
 
+    private void Filechooser(){
+        System.out.println("FILECHOOSER - HA ENTRADO");
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+
+            startActivityForResult(intent, LOAD_IMAGE_RESULT);
+    }
+
+    private String getExtension(Uri uri){
+        System.out.println("URI on GetExtension -> " +uri);
+
+        ContentResolver contentResolver = rootView.getContext().getContentResolver();
+        System.out.println("CONTENTRESOLVER -> " + contentResolver);
+
+        MimeTypeMap mimeTypeMap=MimeTypeMap.getSingleton();
+        System.out.println("MIMETYPEMAP -> " +mimeTypeMap);
+
+        String mime = mimeTypeMap.getExtensionFromMimeType(contentResolver.getType(uri));
+        System.out.println("MIMESTRING -> " +mime);
+
+        // Return file Extension
+        return mime;
+    }
+
+    private void Fileuploader(){
+        StorageReference Ref = mStorage.child(System.currentTimeMillis()+"."+getExtension(mImageUri));
+
+        Ref.putFile(mImageUri)
+                .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                        // Get a URL to the uploaded content
+                        //Uri downloadUrl = taskSnapshot.getDownloadUrl();
+                        Toast.makeText(rootView.getContext(), "Image uploaded successListener", Toast.LENGTH_SHORT).show();
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception exception) {
+                        // Handle unsuccessful uploads
+                        // ...
+                    }
+                });
+    }
 
 
     //--------------------------------------------------------------------------------
@@ -227,16 +272,19 @@ public class ProfileFragment extends Fragment {
         super.onActivityResult(requestCode, resultCode, data);
 
         // si hay respuesta de la galeria de imagenes y el resultado es ok, tenemos datos y podemos conseguirlos
-        if (requestCode == 1 && resultCode == Activity.RESULT_OK && data != null && data.getData() != null){
+        //if (requestCode == 1 && resultCode == Activity.RESULT_OK && data != null && data.getData() != null){
 
-            // cargo los datos del ProgressDialo
+            // obtengo la imagen y la seteo
+            System.out.println("ActivityResult - Ha entrado");
+            mImageUri = data.getData();
+            System.out.println("URI on ActivityResult -> " +mImageUri);
+            mBtnAddImage.setImageURI(mImageUri);
+
+            /*// cargo los datos del ProgressDialo
             mProgressDialog.setTitle("...uploading image");
             mProgressDialog.setMessage("Loading an image to your profile");
             mProgressDialog.setCancelable(false);
             mProgressDialog.show();
-
-            // obtengo la imagen
-            mUri = data.getData();
 
             try {
                 Bitmap mBitmap = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(),mUri);
@@ -244,11 +292,11 @@ public class ProfileFragment extends Fragment {
                 mProgressDialog.dismiss();
             } catch (IOException e) {
                 e.printStackTrace();
-            }
+            }*/
 
         }
 
-    }
+    //}
     //--------------------------------------------------------------------------------
 
     //--------------------------------------------------------------------------------
@@ -279,11 +327,51 @@ public class ProfileFragment extends Fragment {
         });
     }
 
+    private void deleteProductsOfUser(){
+        String idUser = mAuth.getCurrentUser().getUid();
+
+        mDatabase.child("Users").child(idUser).child("nick").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshotUSer) {
+                String nick = String.valueOf(dataSnapshotUSer.getValue());
+
+                Query query = mDatabase.child("Products").orderByChild("seller").equalTo(nick);
+
+                query.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        for (DataSnapshot data : dataSnapshot.getChildren()){
+                            if (dataSnapshot.exists()){
+                                String idProduct = data.getKey();
+                                mDatabase.child("Products").child(idProduct).removeValue();
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+    //--------------------------------------------------------------------------------
+
+    //--------------------------------------------------------------------------------
     private void deleteUser(){
-        String id = mAuth.getCurrentUser().getUid();
+           String id = mAuth.getCurrentUser().getUid();
 
         mDatabase.child("Users").child(id).removeValue();
-        mAuth.getCurrentUser().delete();
+
+        FirebaseUser user = mAuth.getCurrentUser();
+        user.delete();
+
     }
     //-------------------------------------------------------------------------------
 }

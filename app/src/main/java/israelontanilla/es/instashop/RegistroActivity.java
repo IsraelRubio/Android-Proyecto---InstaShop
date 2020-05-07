@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -46,7 +47,7 @@ public class RegistroActivity extends AppCompatActivity {
     private EditText mEditTextPassword;
     private EditText mEditTextEmail;
     private EditText mEditTextMobile;
-    private Button mButtonRegister;
+    private ImageButton mButtonRegister;
 
     // variables del registro
     private String name = "";
@@ -79,7 +80,7 @@ public class RegistroActivity extends AppCompatActivity {
         mEditTextNick = (EditText) findViewById(R.id.editTextNick);
         mEditTextPassword = (EditText) findViewById(R.id.editTextPassword);
         mEditTextMobile = (EditText) findViewById(R.id.editTextMobile);
-        mButtonRegister = (Button) findViewById(R.id.btnRegister);
+        mButtonRegister = findViewById(R.id.btnRegister);
 
         mAuth = FirebaseAuth.getInstance(); // Conseguimos la autenticacion de firebase
         mDatabase = FirebaseDatabase.getInstance().getReference(); // Conseguimos la referencia a la base de datos
@@ -94,7 +95,8 @@ public class RegistroActivity extends AppCompatActivity {
                 nick = mEditTextNick.getText().toString();
                 password = mEditTextPassword.getText().toString();
                 email = mEditTextEmail.getText().toString();
-                mobile = Integer.getInteger(mEditTextMobile.getText().toString());
+                mobile = isNumeric(mEditTextMobile.getText().toString()) ? Integer.parseInt(mEditTextMobile.getText().toString()) : 0;
+
 
                 access = password.contains("11111") ? 1 : 2;
 
@@ -179,7 +181,7 @@ public class RegistroActivity extends AppCompatActivity {
 
     private boolean validateData(){
         if (!name.isEmpty() || !nick.isEmpty() || !password.isEmpty() || !email.isEmpty() || mobile < 111111111 ||
-        name.length() == 0 || nick.length() == 0 || password.length() == 0 || email.length() == 0 || mobile == 0)
+        name.length() == 0 || nick.length() == 0 || password.length() == 0 || email.length() == 0 || mobile > 999999999)
         {
             testData = true;
 
@@ -277,5 +279,19 @@ public class RegistroActivity extends AppCompatActivity {
         });
 
         return testData;
+    }
+
+    public static boolean isNumeric(String cadena) {
+
+        boolean resultado;
+
+        try {
+            Integer.parseInt(cadena);
+            resultado = true;
+        } catch (NumberFormatException excepcion) {
+            resultado = false;
+        }
+
+        return resultado;
     }
 }
