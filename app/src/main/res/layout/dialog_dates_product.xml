@@ -1,41 +1,102 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@drawable/border_dialog"
+    android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Data"
-        android:textSize="30sp"/>
+    <ImageView
+        android:id="@+id/logoDialogDateProducts"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:contentDescription="@string/app_name"
+        android:layout_centerHorizontal="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginStart="20dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.010000000"
+        android:src="@mipmap/sale_empty_icon"/>
 
     <TextView
         android:id="@+id/textViewNameSaleDialog"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
         android:text="Name"
-        android:layout_height="wrap_content"/>
+        android:textColor="#142850"
+        android:textSize="30sp"
+        app:layout_constraintEnd_toEndOf="@+id/logoDialogDateProducts"
+        app:layout_constraintStart_toStartOf="@+id/logoDialogDateProducts"
+        app:layout_constraintTop_toBottomOf="@+id/logoDialogDateProducts" />
+
+    <TextView
+        android:id="@+id/textViewCategorySaleDialog"
+        android:layout_width="match_parent"
+        android:text="Category"
+        android:textColor="#142850"
+        android:textSize="20sp"
+        android:layout_marginStart="20dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="@+id/textViewNameSaleDialog"
+        app:layout_constraintTop_toBottomOf="@+id/textViewNameSaleDialog"/>
 
     <TextView
         android:id="@+id/textViewPriceSaleDialog"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
         android:text="Price"
-        android:layout_height="wrap_content" />
+        android:textColor="#142850"
+        android:textSize="25sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="@+id/textViewLocationSaleDialog"
+        app:layout_constraintTop_toBottomOf="@+id/textViewLocationSaleDialog" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="€"
+        android:textStyle="bold"
+        android:textSize="25sp"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="16dp"
+        app:layout_constraintStart_toEndOf="@id/textViewPriceSaleDialog"
+        app:layout_constraintTop_toBottomOf="@id/textViewLocationSaleDialog"
+        android:textColor="#142850"/>
 
     <TextView
         android:id="@+id/textViewLocationSaleDialog"
         android:layout_width="match_parent"
         android:text="Location"
-        android:layout_height="wrap_content"/>
+        android:textColor="#142850"
+        android:textSize="20sp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="16dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="@+id/textViewCategorySaleDialog"
+        app:layout_constraintTop_toBottomOf="@+id/textViewCategorySaleDialog"/>
 
-    <Button
+    <ImageButton
         android:id="@+id/btnUpdateProduct"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Update"/>
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="20dp"
+        android:layout_alignTop="@+id/textViewNameSaleDialog"
+        android:background="@mipmap/editicon"
+        app:layout_constraintTop_toBottomOf="@+id/textViewPriceSaleDialog"
+        app:layout_constraintStart_toStartOf="@+id/textViewPriceSaleDialog"
+        />
 
-    <Button
+    <ImageButton
         android:id="@+id/btnDeleteProduct"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Delete"/>
-</LinearLayout>
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_alignTop="@+id/textViewNameSaleDialog"
+        android:layout_marginStart="20dp"
+        android:background="@mipmap/deleteicon"
+        app:layout_constraintStart_toEndOf="@+id/btnUpdateProduct"
+        app:layout_constraintTop_toTopOf="@+id/btnUpdateProduct" />
+</androidx.constraintlayout.widget.ConstraintLayout>

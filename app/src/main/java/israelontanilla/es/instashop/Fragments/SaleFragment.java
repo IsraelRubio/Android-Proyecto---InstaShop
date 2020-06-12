@@ -1,9 +1,12 @@
 package israelontanilla.es.instashop.Fragments;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 
@@ -15,6 +18,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.preference.Preference;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,9 +28,12 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -37,7 +44,14 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
+import com.squareup.picasso.Picasso;
+import com.yalantis.ucrop.UCrop;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -47,6 +61,7 @@ import Models.Category;
 import Models.Product;
 import israelontanilla.es.instashop.Adapters.SaleDataAdapter;
 import israelontanilla.es.instashop.R;
+import israelontanilla.es.instashop.UpdateUserRegisterActivity;
 
 public class SaleFragment extends Fragment implements View.OnClickListener {
 
@@ -62,19 +77,28 @@ public class SaleFragment extends Fragment implements View.OnClickListener {
     private ImageButton imageButtonAddImage;
     private AlertDialog dialog;
     private String name;
-    private String price;
-    private String image;
+    private Double price;
     private String location;
+    private boolean imageLoaded;
+    private Uri mImageUri;
+    FirebaseStorage storage;
+    StorageReference storageReference;
     private String user_seller;
-    private String category;
+    private Category category;
     private Spinner spinnerCategories;
     private FirebaseAuth mAuth;
     private DatabaseReference mDatabase;
     private View rootView;
+    private boolean chooseImage;
     private SaleDataAdapter dataAdapter;
+    private Activity activity;
+    private String imgUrl;
+    private final int CODE_IMG_GALLERY = 1;
+    private final String SAMPLE_CROPPED_IMG_NAME = "SampleCropImg";
 
-    public SaleFragment() {
+    public SaleFragment(Activity activity) {
         // Required empty public constructor
+        this.activity = activity;
     }
 
     @Override
@@ -83,15 +107,15 @@ public class SaleFragment extends Fragment implements View.OnClickListener {
 
         // Inflate the layout for this fragment
         rootView = inflater.inflate(R.layout.fragment_sale, container, false);
-
+        chooseImage = false;
         mAuth = FirebaseAuth.getInstance();
         mDatabase = FirebaseDatabase.getInstance().getReference();
-
+        imageLoaded = false;
         btnDialogProduct = rootView.findViewById(R.id.btnLoadDialogProduct);
         recyclerView = rootView.findViewById(R.id.recyclerViewSales);
-        recyclerView.setLayoutManager(new GridLayoutManager(rootView.getContext(),2));
-        preferences = rootView.getContext().getSharedPreferences("preferences", Context.MODE_PRIVATE);
-
+        recyclerView.setLayoutManager(new GridLayoutManager(rootView.getContext(),3));
+        storage = FirebaseStorage.getInstance();
+        //recyclerView.setLayoutManager(new GridLayoutManager(getContext(),2));
         loadDataSale();
 
         btnDialogProduct.setOnClickListener(this);
@@ -102,12 +126,72 @@ public class SaleFragment extends Fragment implements View.OnClickListener {
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.btnLoadDialogProduct:
-                loadDialogAddProduct();
-                break;
+        if (v != null){
+            if (v.getId() == R.id.btnLoadDialogProduct) {
+                    loadDialogAddProduct();
+            }
         }
     }
+
+    private void openFileChooser(){
+        Intent intent = new Intent();
+        intent.setDataAndType(intent.getData(),"image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        intent.putExtra(Intent.EXTRA_LOCAL_ONLY,true);
+
+        System.out.println("Estas en el selector");
+
+        startActivityForResult(Intent.createChooser(intent,"Select your product image"),1);
+
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+
+
+        if (requestCode == 1 && resultCode == Activity.RESULT_OK
+                && data != null && data.getData() != null){
+
+            mImageUri = data.getData();
+            if (mImageUri != null){
+                Glide.with(rootView.getContext())
+                        .load(mImageUri)
+                        .fitCenter()
+                        .centerCrop()
+                        .into(imageButtonAddImage);
+                chooseImage = true;
+            }
+            //---
+                // sube el producto con la anterior url de descarga, y ahora lo pide
+            //---
+            storageReference = storage.getReference("imagenes");
+            final StorageReference photoReference = storageReference.child(mImageUri.getLastPathSegment());
+            photoReference.putFile(mImageUri).continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
+                @Override
+                public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
+                    if (!task.isSuccessful()){
+                        throw task.getException();
+                    }
+                    return photoReference.getDownloadUrl();
+                }
+            }).addOnCompleteListener(new OnCompleteListener<Uri>() {
+                @Override
+                public void onComplete(@NonNull Task<Uri> task) {
+                    if (task.isSuccessful()){
+                        Uri downloadUri = task.getResult();
+                        imgUrl = downloadUri.toString();
+                        imageLoaded = true;
+                    }else{
+                        Toast.makeText(rootView.getContext(),"Upload failed", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
+
+        }
+    }
+
 
     private void loadDataSale() {
 
@@ -166,7 +250,7 @@ public class SaleFragment extends Fragment implements View.OnClickListener {
     }
 
     private void createProduct(){
-
+        System.out.println("imagen(createProduct) -> " +imgUrl);
         // Saco el id del user actual y creo la query
         //----------------------------------------------------------
         String id = "";
@@ -202,40 +286,28 @@ public class SaleFragment extends Fragment implements View.OnClickListener {
                                     isTrue = true;
                                 }
 
-                                preferences.edit().putString("category", spinnerCategories.getItemAtPosition(8).toString());
-
-                                spinnerCategories.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                                    @Override
-                                    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                                            preferences.edit().putString("category", parent.getItemAtPosition(position).toString()).apply();
-                                    }
-
-                                    @Override
-                                    public void onNothingSelected(AdapterView<?> parent) {
-
-                                    }
-                                });
-
                                 if (isTrue) {
                                     //-------------------------------------------------------------------
                                     // Saco los datos del formulario e instancio el producto
                                     //--------------------------------------------------------
                                     name = editTextName.getText().toString();
-                                    price = editTextPrice.getText().toString();
-                                    image = "image";
+                                    price = isDouble(editTextPrice.getText().toString()) ?
+                                        Double.valueOf(editTextPrice.getText().toString()) :
+                                        0;
                                     location = editTextLocation.getText().toString();
                                     user_seller = String.valueOf(dataSnapshotSeller.child("nick").getValue());
-                                    category = preferences.getString("category", "");
-                                    if (category.trim().equals(""))
-                                        category = "other";
+                                    category = (Category) spinnerCategories.getSelectedItem();
 
                                     Query queryMobile = mDatabase.child("Users").child(mAuth.getCurrentUser().getUid());
                                     queryMobile.addListenerForSingleValueEvent(new ValueEventListener() {
                                         @Override
                                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                            String mobile = String.valueOf(dataSnapshot.child("mobile").getValue());
+                                            String email = String.valueOf(dataSnapshot.child("email").getValue());
+                                            if (!chooseImage){
+                                                imgUrl = "";
+                                            }
 
-                                            Product product = new Product(name, price, image, location, user_seller, category, mobile);
+                                            final Product product = new Product(name, price, imgUrl, location, user_seller, category.getCategory(), email);
                                             String productKey = mDatabase.child("Products").push().getKey();
                                             //---------------------------------------------------------
 
@@ -247,7 +319,7 @@ public class SaleFragment extends Fragment implements View.OnClickListener {
                                                     if (task.isSuccessful()) {
                                                         dialog.dismiss();
                                                     } else {
-                                                        Toast.makeText(rootView.getContext(), "La subida del producto ha sido un fracaso", Toast.LENGTH_SHORT);
+                                                        Toast.makeText(rootView.getContext(), "La subida del producto ha sido un fracaso", Toast.LENGTH_SHORT).show();
                                                     }
                                                 }
                                             });
@@ -342,7 +414,6 @@ public class SaleFragment extends Fragment implements View.OnClickListener {
                     ArrayAdapter<Category> adapterCategory = new ArrayAdapter<>(viewDialog.getContext(), R.layout.support_simple_spinner_dropdown_item, categoryList);
                     spinnerCategories.setAdapter(adapterCategory);
                     spinnerCategories.setSelection(8);
-                    preferences.edit().putString("category", "");
                 }
             }
 
@@ -375,11 +446,28 @@ public class SaleFragment extends Fragment implements View.OnClickListener {
 
         loadCategories(viewDialog);
 
+        imageButtonAddImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openFileChooser();
+            }
+        });
+
         btnAddProduct = viewDialog.findViewById(R.id.btnAddProduct);
         btnAddProduct.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                createProduct();
+                if (!chooseImage){
+                    createProduct();
+                }
+
+                if(chooseImage && !imageLoaded){
+                    Toast.makeText(rootView.getContext(),"Wait for the image upload!!", Toast.LENGTH_SHORT).show();
+                }else if (imageLoaded && chooseImage) {
+                    createProduct();
+                    imageLoaded = false;
+                }
+
             }
         });
 

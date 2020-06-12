@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="#DAE1E7">
+
+    <EditText
+        android:id="@+id/editTextMsn"
+        android:layout_width="match_parent"
+        android:layout_height="215dp"
+        android:gravity="top"
+        android:layout_gravity="top"
+        />
+
+    <Button
+        android:id="@+id/btnSendMsn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/holo_purple"
+        android:text="Send menssage"/>
+
+</LinearLayout>

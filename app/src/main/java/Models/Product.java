@@ -2,31 +2,31 @@ package Models;
 
 public class Product {
     private String name;
-    private String price;
+    private double price;
     private String image;
     private String location;
     private String seller;
     private String category;
-    private String mobile;
+    private String email;
 
     public Product() {
         this.name = "Default";
-        this.price = "Default";
+        this.price = 0;
         this.image = "Default";
         this.location = "Default";
         this.seller = "Default";
         this.category = "Default";
-        this.mobile = "Default";
+        this.email = "Default";
     }
 
-    public Product(String name, String price, String image, String location, String seller, String category, String mobile) {
+    public Product(String name, double price, String image, String location, String seller, String category, String email) {
         this.name = name;
         this.price = price;
         this.image = image;
         this.location = location;
         this.seller = seller;
         this.category = category;
-        this.mobile = mobile;
+        this.email = email;
     }
 
     public String getName() {
@@ -37,24 +37,24 @@ public class Product {
         this.name = name;
     }
 
-    public String getPrice() {
+    public double getPrice() {
         return price;
     }
 
-    public String getMobile() {
-        return mobile;
+    public String getEmail() {
+        return email;
     }
 
-    public void setMobile(String mobile) {
-        this.mobile = mobile;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
-    public void setPrice(String price) {
+    public void setPrice(double price) {
         this.price = price;
     }
 
     public String getImage() {
-        return image;
+        return this.image;
     }
 
     public void setImage(String image) {

@@ -13,7 +13,7 @@
         android:background="@mipmap/backprofile">
 
 
-        <ImageButton
+        <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/btnAddImage"
             android:background="@mipmap/profileelipse"
             android:layout_width="180dp"

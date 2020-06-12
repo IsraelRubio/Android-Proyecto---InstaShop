@@ -45,6 +45,7 @@ public class RegistroActivity extends AppCompatActivity {
     private EditText mEditTextName;
     private EditText mEditTextNick;
     private EditText mEditTextPassword;
+    private EditText mEditTextPasswordRepeat;
     private EditText mEditTextEmail;
     private EditText mEditTextMobile;
     private ImageButton mButtonRegister;
@@ -75,12 +76,13 @@ public class RegistroActivity extends AppCompatActivity {
         setContentView(R.layout.activity_registro);
 
         // cargo las vistas del modelo
-        mEditTextName = (EditText) findViewById(R.id.editTextName);
-        mEditTextEmail = (EditText) findViewById(R.id.editTextEmail);
-        mEditTextNick = (EditText) findViewById(R.id.editTextNick);
-        mEditTextPassword = (EditText) findViewById(R.id.editTextPassword);
-        mEditTextMobile = (EditText) findViewById(R.id.editTextMobile);
+        mEditTextName = findViewById(R.id.editTextName);
+        mEditTextEmail = findViewById(R.id.editTextEmail);
+        mEditTextNick = findViewById(R.id.editTextNick);
+        mEditTextPassword = findViewById(R.id.editTextPassword);
+        mEditTextMobile = findViewById(R.id.editTextMobile);
         mButtonRegister = findViewById(R.id.btnRegister);
+        mEditTextPasswordRepeat = findViewById(R.id.repeatRegisterEditTextPassword);
 
         mAuth = FirebaseAuth.getInstance(); // Conseguimos la autenticacion de firebase
         mDatabase = FirebaseDatabase.getInstance().getReference(); // Conseguimos la referencia a la base de datos
@@ -102,6 +104,8 @@ public class RegistroActivity extends AppCompatActivity {
 
                 if (validateData()){
                     RegiterUser();
+                }else {
+                    Toast.makeText(RegistroActivity.this,"The register failed", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -130,6 +134,7 @@ public class RegistroActivity extends AppCompatActivity {
                     }
                     map.put("mobile", mobile);
                     map.put("access", access);
+                    map.put("image", "");
 
                     // consigo el id del usuario que he creado
                     String id = mAuth.getCurrentUser().getUid();
@@ -180,78 +185,29 @@ public class RegistroActivity extends AppCompatActivity {
     }
 
     private boolean validateData(){
-        if (!name.isEmpty() || !nick.isEmpty() || !password.isEmpty() || !email.isEmpty() || mobile < 111111111 ||
-        name.length() == 0 || nick.length() == 0 || password.length() == 0 || email.length() == 0 || mobile > 999999999)
-        {
-            testData = true;
-
-            if (name.length() > 50)
-            {
-                mEditTextName.setError("The length of the name field must be less than 50");
-                testData = false;
-            }else {
-                testData = true;
-            }
-            if (nick.length() > 10)
-            {
-                mEditTextNick.setError("The length of the nick field must be less than 10");
-                testData = false;
-            }else {
-                testData = true;
-            }
-            if (password.length() < 6)
-            {
-                mEditTextPassword.setError("The length of the name field must be greater than 6");
-                testData = false;
-            }else {
-                testData = true;
-            }
-        }
-        else
-        {
-            mEditTextName.setError("This field is required");
-            mEditTextNick.setError("This field is required");
-            mEditTextMobile.setError("This mobile not is valid.");
-            mEditTextPassword.setError("This field is required");
-            mEditTextEmail.setError("This field is required");
-            testData = false;
-        }
-
-        if (mobile < 600000000 || mobile > 799999999){
-            mEditTextMobile.setError("This mobile not is valid");
-            testData = false;
-        }else{
-            testData = true;
-        }
-
         nDatabase.child("Users").orderByChild("nick").addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                listNick.add(dataSnapshot.child("nick").getValue().toString());
-                listEmail.add(dataSnapshot.child("email").getValue().toString());
+                listNick.add(String.valueOf(dataSnapshot.child("nick").getValue()));
+                listEmail.add(String.valueOf(dataSnapshot.child("email").getValue()));
 
-                System.out.println("LISTA DE NICKS");
                 for (String mNick : listNick){
-                    System.out.println("LISTA" + mNick);
-                    if (nick.equals(mNick)){
-                        mEditTextNick.setError("This nick already exist");
-                        System.out.println("Repetido -> " +mNick);
+                    if (nick.equals(mNick)) {
+                        Toast.makeText(RegistroActivity.this,"This nick already exist", Toast.LENGTH_SHORT).show();
                         testData = false;
-                        System.out.println("TEST 1 -> " +testData);
-                    }else{
-                        testData = true;
+                    }else if (name.trim().equals("") || nick.trim().equals("") || password.trim().equals("") || email.trim().equals("") || mobile < 111111111 || mobile > 999999999)
+                    {
+                        testData = false;
+                        Toast.makeText(RegistroActivity.this,"All fields are required", Toast.LENGTH_SHORT).show();
                     }
-                }
-
-                System.out.println("LISTA DE EMAILS");
-                for (String mEmail : listEmail){
-                    System.out.println("LISTA" + mEmail);
-                    if (email.equals(mEmail)){
-                        mEditTextEmail.setError("This email already exist");
-                        System.out.println("Repetido -> " +mEmail);
+                    else if (mobile < 600000000 || mobile > 799999999){
+                        mEditTextMobile.setError("This mobile not is valid");
                         testData = false;
-                        System.out.println("TEST 2 -> " +testData);
-                    }else {
+                    }else if(!mEditTextPassword.getText().toString().equals(mEditTextPasswordRepeat.getText().toString())){
+                        mEditTextPassword.setError("Passwords are not equal");
+                        mEditTextPasswordRepeat.setError("Passwords are not equal");
+                        testData = false;
+                    }else{
                         testData = true;
                     }
                 }

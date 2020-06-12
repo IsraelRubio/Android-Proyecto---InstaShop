@@ -12,7 +12,4 @@
         android:title="Products"
         android:icon="@drawable/ic_reorder_black_24dp"/>
 
-    <item android:id="@+id/menu_help"
-        android:title="Help"
-        android:icon="@drawable/ic_help_black_24dp"/>
 </menu>

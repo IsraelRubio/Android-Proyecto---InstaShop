@@ -53,7 +53,6 @@ public class ProductsFragment extends Fragment {
         mDatabase = FirebaseDatabase.getInstance().getReference();
         recyclerView = rootView.findViewById(R.id.recyclerViewProducts);
         editTextSearch = rootView.findViewById(R.id.editTextSearch);
-
         recyclerView.setLayoutManager(new GridLayoutManager(rootView.getContext(),3));
 
         loadDataRecyclerView("");
@@ -111,8 +110,7 @@ public class ProductsFragment extends Fragment {
                                 if (p.getName().toLowerCase().contains(s.toLowerCase()) ||
                                         p.getSeller().toLowerCase().contains(s.toLowerCase()) ||
                                         p.getCategory().toLowerCase().contains(s.toLowerCase()) ||
-                                        p.getLocation().toLowerCase().contains(s.toLowerCase()) ||
-                                        p.getPrice().toLowerCase().contains(s.toLowerCase())){
+                                        p.getLocation().toLowerCase().contains(s.toLowerCase())){
 
                                     if (!p.getSeller().equals(nick))
                                         productList.add(p);

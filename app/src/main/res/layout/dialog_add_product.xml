@@ -3,14 +3,22 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:background="@drawable/border_dialog"
+    android:layout_margin="20dp"
     android:layout_height="wrap_content">
 
     <ImageView
+        android:layout_width="160dp"
+        android:layout_height="160dp"
+        android:layout_gravity="center"
+        android:background="@mipmap/ventaselipse"/>
+
+    <ImageButton
+        android:id="@+id/imageButtonAddImageSale"
         android:layout_width="match_parent"
-        android:layout_height="80dp"
-        android:gravity="center"
-        android:background="@color/colorRinho"
-        android:src="@drawable/ic_add_box_black_24dp"/>
+        android:layout_height="150dp"
+        android:layout_marginTop="20dp"
+        android:background="#F9B572"
+        android:src="@mipmap/sale_empty_icon" />
 
     <EditText
         android:id="@+id/edittextSaleName"
@@ -29,16 +37,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="location" />
-
-    <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:src="@drawable/baseline_lock_24" />
-
-    <ImageButton
-        android:id="@+id/imageButtonAddImageSale"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
 
     <Spinner
         android:id="@+id/spinnerCategory"
@@ -59,5 +57,5 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/border"
-        android:text="Cerrar" />
+        android:text="Close" />
 </LinearLayout>

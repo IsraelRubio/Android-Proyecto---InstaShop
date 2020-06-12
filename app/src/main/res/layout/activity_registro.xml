@@ -77,21 +77,49 @@
         android:inputType="text"
         android:paddingLeft="8dp"
         android:textColorHint="@android:color/tertiary_text_light"
-        app:layout_constraintTop_toBottomOf="@id/editTextPassword" />
+        app:layout_constraintTop_toBottomOf="@id/linearLayoutRegisterUser" />
 
-    <EditText
-        android:id="@+id/editTextPassword"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:background="@drawable/border"
-        android:drawableLeft="@drawable/baseline_lock_24"
-        android:hint="  Password"
-        android:layout_margin="20dp"
-        android:inputType="textPassword"
-        android:paddingLeft="8dp"
-        android:textColorHint="@android:color/tertiary_text_light"
-        app:layout_constraintStart_toStartOf="@id/editTextEmail"
-        app:layout_constraintTop_toBottomOf="@id/editTextEmail" />
+        android:layout_height="wrap_content"
+        android:id="@+id/linearLayoutRegisterUser"
+        app:layout_constraintStart_toStartOf="@+id/editTextEmail"
+        app:layout_constraintTop_toBottomOf="@+id/editTextEmail"
+        android:orientation="horizontal">
+
+        <EditText
+            android:id="@+id/editTextPassword"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginTop="20dp"
+            android:layout_weight="1"
+            android:layout_marginStart="20dp"
+            android:background="@drawable/border"
+            android:drawableLeft="@drawable/baseline_lock_24"
+            android:hint="  Password"
+            android:inputType="textPassword"
+            android:paddingLeft="8dp"
+            android:textColorHint="@android:color/tertiary_text_light"
+            />
+
+        <EditText
+            android:id="@+id/repeatRegisterEditTextPassword"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_weight="1"
+            android:layout_marginTop="20dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
+            android:background="@drawable/border"
+            android:drawableLeft="@drawable/baseline_lock_24"
+            android:hint="  Repeat"
+            android:inputType="textPassword"
+            android:paddingLeft="8dp"
+            android:textColorHint="@android:color/tertiary_text_light"
+            app:layout_constraintStart_toEndOf="@+id/updateEditTextPassword"
+            app:layout_constraintTop_toBottomOf="@+id/updateEditTextEmail" />
+
+    </LinearLayout>
 
     <EditText
         android:id="@+id/editTextMobile"
@@ -101,7 +129,7 @@
         android:background="@drawable/border"
         android:drawableLeft="@drawable/baseline_stay_current_portrait_24"
         android:hint="  Mobile"
-        android:inputType="textPassword"
+        android:inputType="number"
         android:paddingLeft="8dp"
         android:textColorHint="@android:color/tertiary_text_light"
         app:layout_constraintTop_toBottomOf="@id/editTextNick"
